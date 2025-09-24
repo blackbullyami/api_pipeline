@@ -25,21 +25,36 @@ RUN apt-get update && apt-get install -y  \
     #others
     gcc \
     && rm -rf /var/lib/apt/lists/*
+    
+#create a mini virtual machine code directory
+RUN mkdir -p /code
+
+# set the working directory to that same code directory 
+WORKDIR /code
 
 # Install the application dependencies first (leverage Docker cache)
-COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+COPY requirement.txt   /tmp/requirement.txt
 
-# Copy in the source code
-COPY src ./src
+#copy the source code into the container working directory 
+COPY ./src /code/
+
+# Install the python project requirements
+RUN pip install -r /tmp/requirement.txt
+
+# make the bash script executable
+COPY ./boot/docker-run.sh /opt/run.sh
+RUN chmod +x /opt/run.sh
+
+# Clean up apt cache to reduce image size
+RUN apt-get remove --purge -y \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Create and use non-root user for security
 RUN useradd -m appuser
 USER appuser
 
-# Expose port (5000 in code, but CMD uses 8080 — let's align!)
-EXPOSE 8080
-
-# Run the application
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Run the FastAPI project via the runtime script
+# when the container starts
+CMD ["/opt/run.sh"]
