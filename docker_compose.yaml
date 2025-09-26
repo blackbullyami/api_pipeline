@@ -1,0 +1,11 @@
+services:
+  app:
+    image: api_pipeline
+    build:
+      context:
+      dockerfile: DockerFile
+    environment:
+      - PORT=8002
+    env_file:
+    - .env
+     
