@@ -4,5 +4,9 @@ My Own private Data pipeline!
 
 
 #Docker
--'Docker Build -t analytics-api -f DockerFile.'
--'docker run`
+-`docker Build -t api_pipeline -f DockerFile . `
+-`docker run API_PIPELINE`
+ 
+#commands becomes
+-`docker compose up --watch`
+-`docker compose down` or `docker compose down -v`[to remove volumes]

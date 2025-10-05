@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: api_pipeline
+    container_name: api_pipeline
+    ports:
+      - "8002:8002"     # both sides match
+    environment:
+      - PORT=8002
+      - HOST=0.0.0.0
+    env_file:
+      - .env
+    restart: always
+    command: uvicorn main:app --host 0.0.0.0 --port 8002 --reload
+    volumes:
+      - ./src:/code:rw
+    develop:
+      watch:
+        - action: rebuild
+          path: Dockerfile
+        - action: rebuild
+          path: requirements.txt
+        - action: rebuild
+          path: docker-compose.yaml
