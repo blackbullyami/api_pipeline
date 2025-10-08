@@ -9,4 +9,5 @@ My Own private Data pipeline!
  
 #commands becomes
 -`docker compose up --watch`
--`docker compose down` or `docker compose down -v`[to remove volumes]
+-`docker compose down` or `docker compose down -v`[to remove volumes]"
+-`docker run app bin/bash` to go directly into CLI of the container 
