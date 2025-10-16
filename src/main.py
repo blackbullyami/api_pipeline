@@ -1,8 +1,10 @@
 from typing import Union
 
 from fastapi import FastAPI
-
+from api.events import router as event_router
+#This file is for top level endpoint 
 app = FastAPI()
+app.include_router(event_router,prefix='/api/events')
 
 
 @app.get("/")
